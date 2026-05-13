@@ -1,0 +1,165 @@
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.page-header h1 {
+  font-size: 20px;
+  margin: 0;
+}
+
+.page-subtitle {
+  color: var(--tt-text-muted);
+  margin-top: -8px;
+  margin-bottom: 16px;
+}
+
+.empty-state {
+  background: var(--tt-surface);
+  border: 1px dashed var(--tt-border);
+  padding: 32px;
+  text-align: center;
+  border-radius: var(--tt-radius);
+  color: var(--tt-text-muted);
+}
+
+.card-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 12px;
+}
+
+.card {
+  background: var(--tt-surface);
+  border: 1px solid var(--tt-border);
+  border-radius: var(--tt-radius);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.card__title {
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.card__body {
+  margin: 0;
+  color: var(--tt-text-muted);
+  white-space: pre-line;
+}
+
+.card__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.card__meta {
+  color: var(--tt-text-muted);
+  font-size: 12px;
+}
+
+.card__error {
+  color: var(--tt-danger);
+  margin: 0;
+  font-size: 12px;
+}
+
+.assignee-picker {
+  padding: 6px 8px;
+  border: 1px solid var(--tt-border);
+  border-radius: var(--tt-radius);
+  background: var(--tt-surface);
+}
+
+.btn {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: var(--tt-radius);
+  border: 1px solid transparent;
+  font-weight: 600;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn--primary {
+  background: var(--tt-primary);
+  color: white;
+}
+
+.btn--primary:hover:not(:disabled) {
+  background: var(--tt-primary-hover);
+  text-decoration: none;
+}
+
+.btn--secondary {
+  background: var(--tt-surface);
+  color: var(--tt-primary);
+  border-color: var(--tt-border);
+}
+
+.btn--secondary:hover:not(:disabled) {
+  background: var(--tt-bg);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 600px;
+  background: var(--tt-surface);
+  border: 1px solid var(--tt-border);
+  border-radius: var(--tt-radius);
+  padding: 16px;
+}
+
+.form__field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.form__label {
+  font-weight: 600;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--tt-text-muted);
+}
+
+.form input,
+.form textarea {
+  padding: 8px;
+  border: 1px solid var(--tt-border);
+  border-radius: var(--tt-radius);
+  background: var(--tt-bg);
+  font-family: inherit;
+}
+
+.form__error {
+  color: var(--tt-danger);
+  margin: 0;
+}
+
+.form__actions {
+  display: flex;
+  justify-content: flex-end;
+}

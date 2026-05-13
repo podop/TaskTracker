@@ -1,0 +1,30 @@
+.status-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  line-height: 1.6;
+}
+
+.status-badge--todo {
+  background: var(--tt-status-todo-bg);
+  color: var(--tt-status-todo-fg);
+}
+
+.status-badge--in-progress {
+  background: var(--tt-status-progress-bg);
+  color: var(--tt-status-progress-fg);
+}
+
+.status-badge--done-candidate {
+  background: var(--tt-status-candidate-bg);
+  color: var(--tt-status-candidate-fg);
+}
+
+.status-badge--done {
+  background: var(--tt-status-done-bg);
+  color: var(--tt-status-done-fg);
+}

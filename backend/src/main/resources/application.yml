@@ -1,0 +1,56 @@
+spring:
+  application:
+    name: tasktracker-backend
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/tasktracker}
+    username: ${DB_USERNAME:tasktracker}
+    password: ${DB_PASSWORD:tasktracker}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+    properties:
+      hibernate:
+        jdbc.time_zone: UTC
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+
+server:
+  port: ${SERVER_PORT:8080}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      probes:
+        enabled: true
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+  api-docs:
+    path: /v3/api-docs
+
+app:
+  cors:
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:5173}
+  mock-users:
+    - id: u-001
+      username: alice
+      displayName: Alice Johnson
+    - id: u-002
+      username: bob
+      displayName: Bob Smith
+    - id: u-003
+      username: carol
+      displayName: Carol Diaz
+    - id: u-004
+      username: dan
+      displayName: Dan Park
+    - id: u-005
+      username: eve
+      displayName: Eve Martins
