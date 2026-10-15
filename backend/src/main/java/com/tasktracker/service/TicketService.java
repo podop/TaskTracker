@@ -32,10 +32,17 @@ public class TicketService {
     }
 
     @Transactional(readOnly = true)
-    public List<Ticket> list(TicketStatus statusFilter) {
+    public List<Ticket> list(TicketStatus statusFilter, String assigneeFilter) {
+        if (assigneeFilter == null || assigneeFilter.isBlank()) {
+            return statusFilter == null
+                    ? tickets.findAllByOrderByUpdatedAtDesc()
+                    : tickets.findAllByStatusOrderByUpdatedAtDesc(statusFilter);
+        }
+        MockUser user = users.findByIdOrUsername(assigneeFilter)
+                .orElseThrow(() -> new UnknownUserException("Unknown mock user: " + assigneeFilter));
         return statusFilter == null
-                ? tickets.findAllByOrderByUpdatedAtDesc()
-                : tickets.findAllByStatusOrderByUpdatedAtDesc(statusFilter);
+                ? tickets.findAllByAssigneeIdOrderByUpdatedAtDesc(user.id())
+                : tickets.findAllByStatusAndAssigneeIdOrderByUpdatedAtDesc(statusFilter, user.id());
     }
 
     @Transactional(readOnly = true)

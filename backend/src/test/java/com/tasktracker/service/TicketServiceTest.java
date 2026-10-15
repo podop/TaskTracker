@@ -11,6 +11,9 @@ import com.tasktracker.model.TicketStatus;
 import com.tasktracker.repository.TicketRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.ArgumentCaptor;
 
 import java.lang.reflect.Field;
@@ -23,7 +26,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 class TicketServiceTest {
@@ -133,6 +138,49 @@ class TicketServiceTest {
         UUID id = UUID.randomUUID();
         when(tickets.findById(id)).thenReturn(Optional.empty());
         assertThatThrownBy(() -> service.get(id)).isInstanceOf(NotFoundException.class);
+    }
+
+    @ParameterizedTest
+    @NullSource
+    @ValueSource(strings = {"", "  "})
+    void listWithoutAssigneeFilterUsesExistingQueries(String blankAssignee) {
+        List<Ticket> all = List.of(new Ticket("a", "d"));
+        List<Ticket> byStatus = List.of(new Ticket("b", "d"));
+        when(tickets.findAllByOrderByUpdatedAtDesc()).thenReturn(all);
+        when(tickets.findAllByStatusOrderByUpdatedAtDesc(TicketStatus.TODO)).thenReturn(byStatus);
+
+        assertThat(service.list(null, blankAssignee)).isSameAs(all);
+        assertThat(service.list(TicketStatus.TODO, blankAssignee)).isSameAs(byStatus);
+        verify(tickets, never()).findAllByAssigneeIdOrderByUpdatedAtDesc(any());
+        verify(tickets, never()).findAllByStatusAndAssigneeIdOrderByUpdatedAtDesc(any(), any());
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"alice", "u-001", " ALICE "})
+    void listFiltersByResolvedAssigneeId(String assignee) {
+        List<Ticket> mine = List.of(new Ticket("a", "d"));
+        when(tickets.findAllByAssigneeIdOrderByUpdatedAtDesc("u-001")).thenReturn(mine);
+
+        assertThat(service.list(null, assignee)).isSameAs(mine);
+        verify(tickets).findAllByAssigneeIdOrderByUpdatedAtDesc("u-001");
+    }
+
+    @Test
+    void listCombinesStatusAndAssigneeFilters() {
+        List<Ticket> mine = List.of(new Ticket("a", "d"));
+        when(tickets.findAllByStatusAndAssigneeIdOrderByUpdatedAtDesc(TicketStatus.IN_PROGRESS, "u-001"))
+                .thenReturn(mine);
+
+        assertThat(service.list(TicketStatus.IN_PROGRESS, "alice")).isSameAs(mine);
+        verify(tickets).findAllByStatusAndAssigneeIdOrderByUpdatedAtDesc(TicketStatus.IN_PROGRESS, "u-001");
+    }
+
+    @Test
+    void listRejectsUnknownAssigneeBeforeReadingTickets() {
+        assertThatThrownBy(() -> service.list(TicketStatus.TODO, "ghost"))
+                .isInstanceOf(UnknownUserException.class)
+                .hasMessage("Unknown mock user: ghost");
+        verifyNoInteractions(tickets);
     }
 
     private Ticket persistedTicket(TicketStatus status) {
