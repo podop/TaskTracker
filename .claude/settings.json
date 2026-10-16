@@ -1,15 +1,21 @@
 {
   "enabledPlugins": {
-    "sdd-engineering@dev-digest-ai-marketplace": true,
-    "engineering-paved-path@dev-digest-ai-marketplace": true,
-    "research-tools@dev-digest-ai-marketplace": true,
-    "architecture-review@dev-digest-ai-marketplace": true
+    "sdd-engineering@dev-digest-ai-marketplace-stable": true,
+    "engineering-paved-path@dev-digest-ai-marketplace-stable": true,
+    "research-tools@dev-digest-ai-marketplace-stable": true,
+    "architecture-review@dev-digest-ai-marketplace-stable": true
   },
   "extraKnownMarketplaces": {
     "dev-digest-ai-marketplace": {
       "source": {
         "source": "github",
         "repo": "podop/dev-digest-ai-marketplace"
+      }
+    },
+    "dev-digest-ai-marketplace-stable": {
+      "source": {
+        "source": "url",
+        "url": "https://raw.githubusercontent.com/podop/dev-digest-ai-marketplace/main/channels/stable/.claude-plugin/marketplace.json"
       }
     }
   }
