@@ -14,4 +14,8 @@ public interface TicketRepository extends JpaRepository<Ticket, UUID> {
     List<Ticket> findAllByOrderByUpdatedAtDesc();
 
     List<Ticket> findAllByStatusOrderByUpdatedAtDesc(TicketStatus status);
+
+    List<Ticket> findAllByAssigneeIdOrderByUpdatedAtDesc(String assigneeId);
+
+    List<Ticket> findAllByStatusAndAssigneeIdOrderByUpdatedAtDesc(TicketStatus status, String assigneeId);
 }

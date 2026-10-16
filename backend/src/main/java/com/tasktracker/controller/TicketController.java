@@ -7,6 +7,12 @@ import com.tasktracker.dto.TicketResponse;
 import com.tasktracker.model.Ticket;
 import com.tasktracker.model.TicketStatus;
 import com.tasktracker.service.TicketService;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,8 +48,21 @@ public class TicketController {
     }
 
     @GetMapping
-    public List<TicketResponse> list(@RequestParam(value = "status", required = false) TicketStatus status) {
-        return tickets.list(status).stream().map(TicketResponse::from).toList();
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Tickets ordered by updatedAt descending",
+                    content = @Content(mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = TicketResponse.class)))),
+            @ApiResponse(responseCode = "400",
+                    description = "Unknown mock user in the assignee parameter, or invalid status",
+                    content = @Content(mediaType = "application/problem+json"))
+    })
+    public List<TicketResponse> list(
+            @RequestParam(value = "status", required = false) TicketStatus status,
+            @Parameter(description = "Only tickets assigned to this mock user: user id (e.g. u-001) or username "
+                    + "(e.g. alice). Trimmed and case-insensitive; empty or blank means no filter; "
+                    + "one value per request. Combined with status as a logical AND.")
+            @RequestParam(value = "assignee", required = false) String assignee) {
+        return tickets.list(status, assignee).stream().map(TicketResponse::from).toList();
     }
 
     @GetMapping("/{id}")

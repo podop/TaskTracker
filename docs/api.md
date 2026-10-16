@@ -48,9 +48,28 @@ Content-Type: application/json
 ```http
 GET /api/tickets
 GET /api/tickets?status=IN_PROGRESS
+GET /api/tickets?assignee=alice
+GET /api/tickets?assignee=u-001&status=IN_PROGRESS
 ```
 
 Returns an array of tickets ordered by `updatedAt` descending.
+
+Query parameters (both optional):
+
+- `status` - only tickets in this status.
+- `assignee` - only tickets assigned to this mock user. Accepts the mock user id
+  (`u-001`) or the username (`alice`), resolved like the assignment endpoint:
+  surrounding whitespace is ignored and matching is case-insensitive. An empty
+  or whitespace-only value means no filter. Only one value is supported per
+  request.
+
+When both are given, a ticket must match both (logical AND). Unassigned tickets
+are never returned when `assignee` is applied.
+
+- `200 OK` with the matching tickets (an empty array when nothing matches).
+- `400 Bad Request` if `assignee` is not a known mock user
+  (`Unknown mock user: <value>`, problem details). An invalid `status` also
+  returns `400` and is reported first.
 
 ### Get a single ticket
 
@@ -124,6 +143,7 @@ PATCH /api/manager/tickets/{id}/mark-done
 |-----------------------------------------|--------|----------------------------------------------------------------|
 | Missing or empty `title`                | 400    | `title: must not be blank`                                     |
 | Unknown mock user in `assignee` body    | 400    | `Unknown mock user: <value>`                                   |
+| Unknown mock user in `assignee` query parameter | 400 | `Unknown mock user: <value>`                           |
 | Unknown ticket id                       | 404    | `Ticket not found: <id>`                                       |
 | Illegal status transition               | 409    | `Illegal transition: TODO -> DONE_CANDIDATE`                   |
 | Manager tries to approve a non-candidate| 409    | `Only DONE_CANDIDATE tickets can be marked DONE (current: ...)`|
