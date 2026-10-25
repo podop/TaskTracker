@@ -3,6 +3,7 @@
 A small Jira-inspired task tracker built as a Spring Boot 3 + React + PostgreSQL
 stack. Tickets flow through `TODO → IN_PROGRESS → DONE_CANDIDATE` for the
 assignee, and a manager performs the final `DONE_CANDIDATE → DONE` approval.
+TODO: implement sdd from marketplace
 
 ## Quickstart
 
